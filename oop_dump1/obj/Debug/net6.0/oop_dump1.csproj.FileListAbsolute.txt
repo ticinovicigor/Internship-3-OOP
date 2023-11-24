@@ -1,0 +1,14 @@
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\bin\Debug\net6.0\oop_dump1.exe
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\bin\Debug\net6.0\oop_dump1.deps.json
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\bin\Debug\net6.0\oop_dump1.runtimeconfig.json
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\bin\Debug\net6.0\oop_dump1.dll
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\bin\Debug\net6.0\oop_dump1.pdb
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.AssemblyInfoInputs.cache
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.AssemblyInfo.cs
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.csproj.CoreCompileInputs.cache
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.dll
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\refint\oop_dump1.dll
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.pdb
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\oop_dump1.genruntimeconfig.cache
+C:\Users\igort\Documents\DUMP\Internship-3-OOP\oop_dump1\obj\Debug\net6.0\ref\oop_dump1.dll
