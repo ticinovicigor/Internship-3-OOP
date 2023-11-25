@@ -8,14 +8,14 @@ namespace oop_dump1
 {
     public class Contact
     {
-        public Contact(string name, string phone, string pref) 
+        public Contact(string name, string number, string pref) 
         {
             Name = name;
-            Phone = phone;
+            Number = number;
             Preference = pref;
         }
         public string Name { get; set; }
-        public string Phone { get; set; }
+        public string Number { get; set; }
         public string Preference { get; set; }
     }
 }
