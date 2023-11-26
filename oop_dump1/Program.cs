@@ -39,7 +39,7 @@ static Contact ChooseContact(Dictionary<Contact, List<Call>> phonebook, List<str
     while (true)
     {
         Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-        Console.WriteLine("Unesite ime kontakta kojim zelite upravljati:\n");
+        Console.WriteLine("Unesite ime kontakta:\n");
         ListContacts(phonebook);
         choice = Console.ReadLine();
         choice = choice.ToLower();
@@ -110,6 +110,7 @@ while (choice_main != "0")
         "0 - Izlaz iz aplikacije\n");
     
     choice_main = Console.ReadLine();
+    var chosen_contact = new Contact(new string(""), new string(""), new string(""));
     Console.Clear();
     tabs.Clear();
     switch (choice_main)
@@ -167,6 +168,29 @@ while (choice_main != "0")
             break; 
         
         case "3":
+            tabs.Add("Brisanje kontakta");
+            chosen_contact = ChooseContact(phonebook, tabs);
+            first_time = true;
+            sure = "";
+            while (sure != "1" && sure != "0")
+            {
+                Console.Clear();
+                if (!first_time)
+                    Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+                first_time = false;
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine($"Jeste li sigurni da zelite izbrisati kontakt ({chosen_contact.Name}, {chosen_contact.Number}, {chosen_contact.Preference})?\n1 - Da\n0 - Ne");
+                sure = Console.ReadLine();
+            }
+            Console.Clear();
+            if (sure == "1")
+            {
+                phonebook.Remove(chosen_contact);
+                Console.WriteLine("Kontakt uspjesno izbrisan!\n");
+            }
+            else
+                Console.WriteLine("Kontakt nije izbrisan\n");
+
             break; 
         
         case "4":
@@ -174,7 +198,7 @@ while (choice_main != "0")
         
         case "5":
             tabs.Add("Upravljanje kontaktom");
-            var chosen_contact = ChooseContact(phonebook, tabs);
+            chosen_contact = ChooseContact(phonebook, tabs);
             tabs.Add(chosen_contact.Name);
             var choice_manage = ManageContact(tabs);
             var calls = phonebook[chosen_contact];
