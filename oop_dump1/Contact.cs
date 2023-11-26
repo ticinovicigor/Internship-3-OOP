@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,5 +18,7 @@ namespace oop_dump1
         public string Name { get; set; }
         public string Number { get; set; }
         public string Preference { get; set; }
+
+        
     }
 }

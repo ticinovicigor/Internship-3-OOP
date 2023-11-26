@@ -3,6 +3,7 @@ mozda nekako dodavat u listu npr. tabs i onda
 Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
  */
 using oop_dump1;
+using System.Net.WebSockets;
 using System.Xml.Serialization;
 
 static void ListContacts(Dictionary<Contact, List<Call>> phonebook)
@@ -15,6 +16,23 @@ static void ListContacts(Dictionary<Contact, List<Call>> phonebook)
     Console.WriteLine("");
 }
 
+static string ChoosePreference(List<string> preferences, List<string> tabs)
+{
+    var input = "";
+    var first_time = true;
+    while (!preferences.Contains(input))
+    {
+        Console.Clear();
+        if(!first_time)
+            Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+        first_time = false;
+        Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+        Console.WriteLine("Unesite preferencu kontakta (Normalan/Favorit/Blokiran):");
+        input = Console.ReadLine();
+        input = input.ToLower();
+    }
+    return input;
+}
 static Contact ChooseContact(Dictionary<Contact, List<Call>> phonebook, List<string> tabs)
 {
     var choice = "";
@@ -64,17 +82,22 @@ static string ManageContact(List<string> tabs)
 }
 
 
-var default_contact = new Contact("Igor Ticinovic", "0958116868", "Normalan");
-var default_call = new Call(DateTime.Parse("11/24/2023 10:18:00 PM"), "zavrsen");
+
+var default_contact = new Contact("Igor Ticinovic", "0958116868", "normalan");
+var default_call = new Call(DateTime.Parse("11/24/2023 10:18:00 PM"), "zavrsen", 20);
 var phonebook = new Dictionary<Contact, List<Call>>()
 {
     {default_contact, new List<Call> {default_call} },
 };
 
 var tabs = new List<string>();
+var preferences = new List<string> { "normalan", "favorit", "blokiran" };
 
 var choice_main = "";
 var temp = "";
+var first_time = true;
+var sure = "";
+var flag = false;
 
 while (choice_main != "0")
 {
@@ -89,7 +112,7 @@ while (choice_main != "0")
     choice_main = Console.ReadLine();
     Console.Clear();
     tabs.Clear();
-    switch(choice_main)
+    switch (choice_main)
     {
         case "1":
             tabs.Add("Ispis kontakata");
@@ -100,8 +123,47 @@ while (choice_main != "0")
             temp = Console.ReadLine();
             Console.Clear();
             break;
-        
+
         case "2":
+            tabs.Add("Dodavanje kontakta");
+            Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+            Console.WriteLine("Unesite ime i prezime novog kontakta:");
+            var new_contact_name = Console.ReadLine();
+            var new_contact_number = "";
+            int temp_int = 0;
+            first_time = true;
+            while (!int.TryParse(new_contact_number, out temp_int) || new_contact_number.Contains("-"))
+            {
+                Console.Clear();
+                if(!first_time)
+                    Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+                first_time = false;
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("Unesite telefonski broj novog kontakta:");
+                new_contact_number = Console.ReadLine();
+            }
+            var new_contact_preference = ChoosePreference(preferences, tabs);
+            first_time = true;
+            sure = "";
+            while (sure != "1" && sure != "0")
+            {
+                Console.Clear();
+                if (!first_time)
+                    Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+                first_time = false;
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine($"Jeste li sigurni da zelite dodati novi kontakt({new_contact_name}, {new_contact_number}, {new_contact_preference})?\n1 - Da\n0 - Ne");
+                sure = Console.ReadLine();
+            }
+            Console.Clear();
+            if (sure == "1")
+            {
+                phonebook.Add(new Contact(new_contact_name, new_contact_number, new_contact_preference), new List<Call>());
+                Console.WriteLine("Novi kontakt uspjesno dodan!\n");
+            }
+            else
+                Console.WriteLine("Novi kontakt nije dodan\n");
+
             break; 
         
         case "3":
@@ -128,7 +190,7 @@ while (choice_main != "0")
                     for (int i = 0; i < calls.Count(); i++)
                     {
                         var newest_time = new DateTime();
-                        var first_time = true;
+                        first_time = true;
                         foreach (var item in calls)
                         {
                             if (first_time && !done_times.Contains(item.Time))
@@ -161,7 +223,7 @@ while (choice_main != "0")
                 case "2":
                     tabs.Add("Kreiranje poziva");
                     Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-                    if(chosen_contact.Preference == "Blokiran")
+                    if(chosen_contact.Preference == "blokiran")
                     {
                         Console.WriteLine($"\nKontakt {chosen_contact.Name} je blokiran.\nAko zelite uspostaviti poziv s ovim kontaktom, odblokirajte ga.");
                         Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
@@ -169,7 +231,50 @@ while (choice_main != "0")
                         Console.Clear();
                         break;
                     }
-                    //random odgovor na poziv, dodat u dictionary...
+                    
+                    foreach (var contact in phonebook)
+                    {
+                        foreach (var call in contact.Value)
+                        {
+                            if(call.Status == "u tijeku")
+                            {
+                                if ((DateTime.Now - call.Time).TotalSeconds < call.Length)
+                                {
+                                    Console.WriteLine("Nije moguce uspostaviti poziv: poziv u tijeku vec postoji");
+                                    Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                                    temp = Console.ReadLine();
+                                    Console.Clear();
+                                    flag = true;
+                                    break;
+                                }
+                                else
+                                    call.Status = "zavrsen";                                    
+                            }
+                        }
+                        if (flag)
+                            break;
+                    }
+                    if(flag) 
+                        break;
+                    
+                    Random rnd = new Random();
+                    var new_call_status = rnd.Next(3);
+                    
+                    switch(new_call_status)
+                    {
+                        case 1:
+                            phonebook[chosen_contact].Add(new Call(DateTime.Now, "propusten", 0));
+                            Console.Clear();
+                            Console.WriteLine("Osoba se ne javlja, pokusajte kasnije\n");
+                            break;
+                        
+                        case 2:
+                            var new_call_length = rnd.Next(21);
+                            phonebook[chosen_contact].Add(new Call(DateTime.Now, "u tijeku", new_call_length));
+                            Console.Clear();
+                            Console.WriteLine("Poziv uspjesno uspostavljen i u tijeku!\n");
+                            break;
+                    }
 
                     break;
                 

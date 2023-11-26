@@ -8,12 +8,16 @@ namespace oop_dump1
 {
     public class Call
     {
-        public Call(DateTime time, string status) 
+        public Call(DateTime time, string status, int length) 
         {
             Time = time;
             Status = status;
+            Length = length;
         }
         public DateTime Time { get; set; }
         public string Status { get; set; }
+        public int Length { get; set; }
+
+        
     }
 }
