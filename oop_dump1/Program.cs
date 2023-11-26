@@ -333,6 +333,22 @@ while (choice_main != "0")
             break; 
         
         case "6":
+            tabs.Add("Ispis poziva");
+            Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+            Console.WriteLine("\nKONTAKT\tVRIJEME POZIVA\tSTATUS POZIVA");
+            foreach(var contact in phonebook)
+            {
+                foreach (var call in contact.Value)
+                {
+                    if (call.Status == "u tijeku" && (DateTime.Now - call.Time).TotalSeconds >= call.Length)
+                        call.Status = "zavrsen";
+                    Console.WriteLine($"{contact.Key}\t{call.Time}\t{call.Status}");
+                }
+            }
+            Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+            temp = Console.ReadLine();
+            Console.Clear();
+
             break;
         
         case "0":
