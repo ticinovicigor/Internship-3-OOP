@@ -27,7 +27,7 @@ static string ChoosePreference(List<string> preferences, List<string> tabs)
             Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
         first_time = false;
         Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-        Console.WriteLine("Unesite preferencu kontakta (Normalan/Favorit/Blokiran):");
+        Console.WriteLine("Unesite preferencu kontakta (normalan/favorit/blokiran):");
         input = Console.ReadLine();
         input = input.ToLower();
     }
@@ -194,6 +194,30 @@ while (choice_main != "0")
             break; 
         
         case "4":
+            tabs.Add("Mijenjanje preference");
+            chosen_contact = ChooseContact(phonebook, tabs);
+            var new_preference = ChoosePreference(preferences, tabs);
+            first_time = true;
+            sure = "";
+            while (sure != "1" && sure != "0")
+            {
+                Console.Clear();
+                if (!first_time)
+                    Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+                first_time = false;
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine($"Jeste li sigurni da zelite preferencu kontakta {chosen_contact.Name} s {chosen_contact.Preference} na {new_preference}?\n1 - Da\n0 - Ne");
+                sure = Console.ReadLine();
+            }
+            Console.Clear();
+            if (sure == "1")
+            {
+                chosen_contact.Preference = new_preference;
+                Console.WriteLine("Preferenca uspjesno promijenjena!\n");
+            }
+            else
+                Console.WriteLine("Preferenca nije promijenjena\n");
+
             break; 
         
         case "5":
