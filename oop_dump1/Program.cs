@@ -1,7 +1,4 @@
-﻿/*
-mozda nekako dodavat u listu npr. tabs i onda
-Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
- */
+
 using oop_dump1;
 using System.Net.WebSockets;
 using System.Xml.Serialization;
