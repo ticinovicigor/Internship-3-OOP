@@ -99,6 +99,7 @@ var first_time = true;
 var sure = "";
 var flag = false;
 
+
 while (choice_main != "0")
 {
     Console.WriteLine("1 - Ispis svih kontakata\n" +
@@ -119,6 +120,14 @@ while (choice_main != "0")
             tabs.Add("Ispis kontakata");
             Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
             Console.WriteLine("");
+            if(phonebook.Count == 0)
+            {
+                Console.WriteLine("Telefonski imenik je prazan");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
             ListContacts(phonebook);
             Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
             temp = Console.ReadLine();
@@ -127,21 +136,43 @@ while (choice_main != "0")
 
         case "2":
             tabs.Add("Dodavanje kontakta");
-            Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-            Console.WriteLine("Unesite ime i prezime novog kontakta:");
-            var new_contact_name = Console.ReadLine();
-            var new_contact_number = "";
-            int temp_int = 0;
-            first_time = true;
-            while (!int.TryParse(new_contact_number, out temp_int) || new_contact_number.Contains("-"))
+            var new_contact_name = "";
+            while (new_contact_name == "")
             {
                 Console.Clear();
-                if(!first_time)
+                if (!first_time)
                     Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
                 first_time = false;
                 Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-                Console.WriteLine("Unesite telefonski broj novog kontakta:");
+                Console.WriteLine("Unesite ime i prezime novog kontakta:");
+                new_contact_name = Console.ReadLine();
+            }
+            
+            var new_contact_number = "";
+            int temp_int = 0;
+            first_time = true;
+            var num_exists = false;
+            while (!int.TryParse(new_contact_number, out temp_int) || new_contact_number.Contains("-"))
+            {
+                Console.Clear();
+                if(num_exists)
+                    Console.WriteLine("Kontakt s ovim brojem vec postoji\n");
+                else if(!first_time)
+                    Console.WriteLine("Nepravilan unos, pokusajte ponovo\n");
+                first_time = false;
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("Unesite telefonski broj novog kontakta (bez razmaka ili crtica!):");
                 new_contact_number = Console.ReadLine();
+                num_exists = false;
+                foreach (var item in phonebook)
+                {
+                    if(item.Key.Number == new_contact_number)
+                    {
+                        new_contact_number = "";
+                        num_exists = true;
+                        break;
+                    }
+                }
             }
             var new_contact_preference = ChoosePreference(preferences, tabs);
             first_time = true;
@@ -169,6 +200,15 @@ while (choice_main != "0")
         
         case "3":
             tabs.Add("Brisanje kontakta");
+            if (phonebook.Count == 0)
+            {
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("\nTelefonski imenik je prazan");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
             chosen_contact = ChooseContact(phonebook, tabs);
             first_time = true;
             sure = "";
@@ -195,6 +235,15 @@ while (choice_main != "0")
         
         case "4":
             tabs.Add("Mijenjanje preference");
+            if (phonebook.Count == 0)
+            {
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("\nTelefonski imenik je prazan");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
             chosen_contact = ChooseContact(phonebook, tabs);
             var new_preference = ChoosePreference(preferences, tabs);
             first_time = true;
@@ -222,6 +271,15 @@ while (choice_main != "0")
         
         case "5":
             tabs.Add("Upravljanje kontaktom");
+            if (phonebook.Count == 0)
+            {
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("\nTelefonski imenik je prazan");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
             chosen_contact = ChooseContact(phonebook, tabs);
             tabs.Add(chosen_contact.Name);
             var choice_manage = ManageContact(tabs);
@@ -230,6 +288,18 @@ while (choice_main != "0")
             {
                 case "1":
                     tabs.Add("Ispis poziva");
+                                      
+                    
+                    if (phonebook[chosen_contact].Count == 0)
+                    {
+                        Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                        Console.WriteLine("\nPozivi nisu pronadeni");
+                        Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                        temp = Console.ReadLine();
+                        Console.Clear();
+                        break;
+                    }
+                    
                     Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
                     Console.WriteLine($"\nVRIJEME USPOSTAVE\t\tSTATUS");
                     var done_times = new List<DateTime>();                    
@@ -279,7 +349,8 @@ while (choice_main != "0")
                         Console.Clear();
                         break;
                     }
-                    
+
+                    flag = false;
                     foreach (var contact in phonebook)
                     {
                         foreach (var call in contact.Value)
@@ -334,15 +405,44 @@ while (choice_main != "0")
         
         case "6":
             tabs.Add("Ispis poziva");
+            if (phonebook.Count == 0)
+            {
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("\nTelefonski imenik je prazan");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
+
+            var calls_exist = false;
+            foreach (var item in phonebook)
+            {
+                if(item.Value.Count > 0)
+                {
+                    calls_exist = true;
+                    break;
+                }
+            }
+            if (!calls_exist)
+            {
+                Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
+                Console.WriteLine("\nPozivi nisu pronadeni");
+                Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
+                temp = Console.ReadLine();
+                Console.Clear();
+                break;
+            }
+
             Console.WriteLine("> " + String.Join(" > ", tabs.ToArray()));
-            Console.WriteLine("\nKONTAKT\tVRIJEME POZIVA\tSTATUS POZIVA");
+            Console.WriteLine("\nKONTAKT\t\tVRIJEME POZIVA\t\tSTATUS POZIVA");
             foreach(var contact in phonebook)
             {
                 foreach (var call in contact.Value)
                 {
                     if (call.Status == "u tijeku" && (DateTime.Now - call.Time).TotalSeconds >= call.Length)
                         call.Status = "zavrsen";
-                    Console.WriteLine($"{contact.Key}\t{call.Time}\t{call.Status}");
+                    Console.WriteLine($"{contact.Key.Name}\t{call.Time}\t{call.Status}");
                 }
             }
             Console.WriteLine("\nZa povratak na glavni meni unesite bilo sto:");
